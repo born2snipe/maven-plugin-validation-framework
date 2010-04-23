@@ -7,4 +7,13 @@ Allows to make validators for how your maven plugin is configured
 - extend the Mojo: b2s.maven.validation.AbstractValidatingMojo
 - implement b2s.maven.validation.PluginValidator
 - then just set your validator on your Mojo
+
+== Maven Repo
+
+    <repositories>
+      <repository>
+        <id>b2s-repo</id>
+        <url>http://b2s-repo.googlecode.com/svn/trunk/mvn-repo</url>
+      </repository>
+    </repositories>
 	
