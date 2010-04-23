@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>b2s</groupId>
-    <artifactId>maven-pluginn-validation-framework</artifactId>
+    <artifactId>maven-plugin-validation-framework</artifactId>
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Simple Validation Framework for Maven Plugins</name>
