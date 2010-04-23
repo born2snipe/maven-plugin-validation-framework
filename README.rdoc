@@ -1,0 +1,10 @@
+= Simple Validation Framework for Maven Plugins
+
+== What it does?
+Allows to make validators for how your maven plugin is configured
+
+== How to use it?
+	- extend the Mojo: b2s.maven.validation.AbstractValidatingMojo
+	- implement b2s.maven.validation.PluginValidator
+	- then just set your validator on your Mojo
+	
