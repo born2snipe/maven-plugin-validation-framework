@@ -16,5 +16,5 @@ import b2s.maven.PluginContext;
 
 
 public interface PluginValidator {
-    void validate(PluginContext context);
+    void validate(PluginContext context, PluginErrors errors);
 }

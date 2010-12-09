@@ -12,6 +12,8 @@
  */
 package b2s.maven;
 
+import b2s.maven.validation.PluginErrors;
+import b2s.maven.validation.PluginErrorsFactory;
 import b2s.maven.validation.PluginValidator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -24,11 +26,13 @@ import static junit.framework.Assert.*;
 import static org.mockito.Mockito.*;
 
 
-public class AbstractValidatingMojoTest {
+public class AbstractMojoTest {
     private PluginContext context;
     private PluginContextFactory contextFactory;
     private PluginValidator validator;
     private ShuntMojo mojo;
+    private PluginErrorsFactory pluginErrorsFactory;
+    private PluginErrors errors;
 
     @Test
     public void nullValidator() throws MojoExecutionException, MojoFailureException {
@@ -43,14 +47,14 @@ public class AbstractValidatingMojoTest {
     public void passesValidators() throws MojoExecutionException, MojoFailureException {
         mojo.execute();
 
-        verify(validator).validate(context);
+        verify(validator).validate(context, errors);
         assertTrue(mojo.executed);
     }
 
     @Test
     public void hasMultipleErrors() {
-        when(context.hasErrors()).thenReturn(true);
-        when(context.getErrors()).thenReturn(Arrays.asList("error", "error2"));
+        when(errors.hasErrors()).thenReturn(true);
+        when(errors.getErrors()).thenReturn(Arrays.asList("error", "error2"));
 
         try {
             mojo.execute();
@@ -61,13 +65,13 @@ public class AbstractValidatingMojoTest {
 
         }
 
-        verify(validator).validate(context);
+        verify(validator).validate(context, errors);
     }
 
     @Test
     public void hasSingleError() {
-        when(context.hasErrors()).thenReturn(true);
-        when(context.getErrors()).thenReturn(Arrays.asList("error"));
+        when(errors.hasErrors()).thenReturn(true);
+        when(errors.getErrors()).thenReturn(Arrays.asList("error"));
 
         try {
             mojo.execute();
@@ -78,7 +82,7 @@ public class AbstractValidatingMojoTest {
 
         }
 
-        verify(validator).validate(context);
+        verify(validator).validate(context, errors);
         assertFalse(mojo.executed);
     }
 
@@ -87,19 +91,23 @@ public class AbstractValidatingMojoTest {
         context = mock(PluginContext.class);
         contextFactory = mock(PluginContextFactory.class);
         validator = mock(PluginValidator.class);
+        pluginErrorsFactory = mock(PluginErrorsFactory.class);
+        errors = mock(PluginErrors.class);
 
         mojo = new ShuntMojo();
         mojo.setPluginValidatorContextFactory(contextFactory);
         mojo.setValidator(validator);
+        mojo.setPluginErrorsFactory(pluginErrorsFactory);
 
         when(contextFactory.build(mojo)).thenReturn(context);
+        when(pluginErrorsFactory.build()).thenReturn(errors);
     }
 
     private static class ShuntMojo extends AbstractMojo {
         private boolean executed = false;
 
         @Override
-        protected void executePlugin() throws MojoExecutionException, MojoFailureException {
+        protected void executePlugin(PluginContext context) throws MojoExecutionException, MojoFailureException {
             executed = true;
         }
     }

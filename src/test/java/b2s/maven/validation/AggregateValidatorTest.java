@@ -23,6 +23,7 @@ import static org.mockito.Mockito.*;
 public class AggregateValidatorTest {
     private PluginContext context;
     private PluginValidator child;
+    private PluginErrors errors;
 
     @Test
     public void multipleValidators_stopOfFirstFailure() {
@@ -30,11 +31,11 @@ public class AggregateValidatorTest {
 
         AggregateValidator validator = new AggregateValidator(true, child, child2);
 
-        when(context.hasErrors()).thenReturn(true);
+        when(errors.hasErrors()).thenReturn(true);
 
-        validator.validate(context);
+        validator.validate(context, errors);
 
-        verify(child).validate(context);
+        verify(child).validate(context, errors);
         verifyZeroInteractions(child2);
     }
     
@@ -46,24 +47,25 @@ public class AggregateValidatorTest {
 
         InOrder inOrder = inOrder(child, child2);
 
-        validator.validate(context);
+        validator.validate(context, errors);
 
-        inOrder.verify(child).validate(context);
-        inOrder.verify(child2).validate(context);
+        inOrder.verify(child).validate(context, errors);
+        inOrder.verify(child2).validate(context, errors);
     }
 
     @Test
     public void singleValidator() {
         AggregateValidator validator = new AggregateValidator(child);
 
-        validator.validate(context);
+        validator.validate(context, errors);
 
-        verify(child).validate(context);
+        verify(child).validate(context, errors);
     }
 
     @Before
     public void setUp() throws Exception {
         context = mock(PluginContext.class);
+        errors = mock(PluginErrors.class);
         child = mock(PluginValidator.class);
     }
 }

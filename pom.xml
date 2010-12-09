@@ -5,7 +5,7 @@
     <artifactId>maven-plugin-validation-framework</artifactId>
     <packaging>jar</packaging>
     <version>0.2-SNAPSHOT</version>
-    <name>Simple Validation Framework for Maven Plugins</name>
+    <name>Simple Mojo Framework</name>
 
     <scm>
         <developerConnection>scm:git:git://github.com/born2snipe/maven-plugin-validation-framework.git

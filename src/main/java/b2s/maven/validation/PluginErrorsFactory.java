@@ -10,32 +10,11 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package b2s.maven;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
+package b2s.maven.validation;
 
 
-public class PluginContext {
-    private Map<String, Object> values = new LinkedHashMap<String, Object>();
-
-    public <T> T get(String name, Class<T> clazz) {
-        return (T) values.get(name);
-    }
-
-    public Object get(String name) {
-        return values.get(name);
-    }
-
-    public void put(String name, Object value) {
-        values.put(name, value);
-    }
-
-    public void putAll(Map<String, Object> values) {
-        this.values.putAll(values);
-    }
-
-    public int size() {
-        return values.size();
+public class PluginErrorsFactory {
+    public PluginErrors build() {
+        return new PluginErrors();
     }
 }

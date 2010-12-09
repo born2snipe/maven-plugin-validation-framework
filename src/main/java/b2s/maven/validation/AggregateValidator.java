@@ -28,10 +28,10 @@ public class AggregateValidator implements PluginValidator {
         this(false, validators);
     }
 
-    public void validate(PluginContext context) {
+    public void validate(PluginContext context, PluginErrors errors) {
         for (PluginValidator validator : validators) {
-            validator.validate(context);
-            if (stopOnFirstError && context.hasErrors()) {
+            validator.validate(context, errors);
+            if (stopOnFirstError && errors.hasErrors()) {
                 break;
             }
         }

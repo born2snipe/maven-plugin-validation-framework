@@ -14,7 +14,7 @@ package b2s.maven;
 
 import java.lang.reflect.Field;
 
-public class PluginContextFactory {
+class PluginContextFactory {
     public PluginContext build(Object object) {
         PluginContext context = new PluginContext();
 
