@@ -10,21 +10,21 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package b2s.maven.validation;
+package b2s.maven;
 
+import b2s.maven.validation.PluginValidator;
 import org.apache.commons.lang.StringUtils;
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 
 
-public abstract class AbstractValidatingMojo extends AbstractMojo {
+public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {
     private PluginValidator validator;
-    private PluginValidatorContextFactory pluginValidatorContextFactory = new PluginValidatorContextFactory();
+    private PluginContextFactory pluginContextFactory = new PluginContextFactory();
 
     public final void execute() throws MojoExecutionException, MojoFailureException {
         if (validator != null) {
-            PluginValidatorContext context = pluginValidatorContextFactory.build(this);
+            PluginContext context = pluginContextFactory.build(this);
             validator.validate(context);
 
             if (context.hasErrors()) {
@@ -42,7 +42,7 @@ public abstract class AbstractValidatingMojo extends AbstractMojo {
         this.validator = validator;
     }
 
-    protected void setPluginValidatorContextFactory(PluginValidatorContextFactory pluginValidatorContextFactory) {
-        this.pluginValidatorContextFactory = pluginValidatorContextFactory;
+    protected void setPluginValidatorContextFactory(PluginContextFactory pluginContextFactory) {
+        this.pluginContextFactory = pluginContextFactory;
     }
 }

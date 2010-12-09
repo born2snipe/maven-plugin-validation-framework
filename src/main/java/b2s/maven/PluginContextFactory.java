@@ -10,13 +10,13 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package b2s.maven.validation;
+package b2s.maven;
 
 import java.lang.reflect.Field;
 
-public class PluginValidatorContextFactory {
-    public PluginValidatorContext build(Object object) {
-        PluginValidatorContext context = new PluginValidatorContext();
+public class PluginContextFactory {
+    public PluginContext build(Object object) {
+        PluginContext context = new PluginContext();
 
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {

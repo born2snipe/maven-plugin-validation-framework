@@ -10,8 +10,9 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package b2s.maven.validation;
+package b2s.maven;
 
+import b2s.maven.validation.PluginValidator;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.junit.Before;
@@ -24,8 +25,8 @@ import static org.mockito.Mockito.*;
 
 
 public class AbstractValidatingMojoTest {
-    private PluginValidatorContext context;
-    private PluginValidatorContextFactory contextFactory;
+    private PluginContext context;
+    private PluginContextFactory contextFactory;
     private PluginValidator validator;
     private ShuntMojo mojo;
 
@@ -83,8 +84,8 @@ public class AbstractValidatingMojoTest {
 
     @Before
     public void setUp() throws Exception {
-        context = mock(PluginValidatorContext.class);
-        contextFactory = mock(PluginValidatorContextFactory.class);
+        context = mock(PluginContext.class);
+        contextFactory = mock(PluginContextFactory.class);
         validator = mock(PluginValidator.class);
 
         mojo = new ShuntMojo();
@@ -94,7 +95,7 @@ public class AbstractValidatingMojoTest {
         when(contextFactory.build(mojo)).thenReturn(context);
     }
 
-    private static class ShuntMojo extends AbstractValidatingMojo {
+    private static class ShuntMojo extends AbstractMojo {
         private boolean executed = false;
 
         @Override

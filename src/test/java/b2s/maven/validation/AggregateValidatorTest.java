@@ -12,6 +12,7 @@
  */
 package b2s.maven.validation;
 
+import b2s.maven.PluginContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
@@ -20,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 
 public class AggregateValidatorTest {
-    private PluginValidatorContext context;
+    private PluginContext context;
     private PluginValidator child;
 
     @Test
@@ -62,7 +63,7 @@ public class AggregateValidatorTest {
 
     @Before
     public void setUp() throws Exception {
-        context = mock(PluginValidatorContext.class);
+        context = mock(PluginContext.class);
         child = mock(PluginValidator.class);
     }
 }

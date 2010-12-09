@@ -10,7 +10,7 @@
  * distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and limitations under the License.
  */
-package b2s.maven.validation;
+package b2s.maven;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,12 +19,12 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 
 
-public class PluginValidatorContextFactoryTest {
-    private PluginValidatorContextFactory factory;
+public class PluginContextFactoryTest {
+    private PluginContextFactory factory;
 
     @Test
     public void multipleFields() {
-        PluginValidatorContext context = factory.build(new MultipleFields());
+        PluginContext context = factory.build(new MultipleFields());
 
         assertEquals(2, context.size());
         assertEquals("value", context.get("field"));
@@ -33,7 +33,7 @@ public class PluginValidatorContextFactoryTest {
 
     @Test
     public void singleField() {
-        PluginValidatorContext context = factory.build(new SingleField());
+        PluginContext context = factory.build(new SingleField());
 
         assertEquals(1, context.size());
         assertEquals("value", context.get("name"));
@@ -41,7 +41,7 @@ public class PluginValidatorContextFactoryTest {
 
     @Test
     public void noFields() {
-        PluginValidatorContext context = factory.build(new NoFields());
+        PluginContext context = factory.build(new NoFields());
 
         assertNotNull(context);
         assertEquals(0, context.size());
@@ -49,7 +49,7 @@ public class PluginValidatorContextFactoryTest {
 
     @Before
     public void setUp() throws Exception {
-        factory = new PluginValidatorContextFactory();
+        factory = new PluginContextFactory();
     }
 
     private static class MultipleFields {

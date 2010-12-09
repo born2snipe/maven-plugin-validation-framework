@@ -12,7 +12,9 @@
  */
 package b2s.maven.validation;
 
+import b2s.maven.PluginContext;
+
 
 public interface PluginValidator {
-    void validate(PluginValidatorContext context);
+    void validate(PluginContext context);
 }

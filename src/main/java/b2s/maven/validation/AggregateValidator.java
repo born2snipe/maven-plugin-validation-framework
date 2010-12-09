@@ -12,6 +12,8 @@
  */
 package b2s.maven.validation;
 
+import b2s.maven.PluginContext;
+
 
 public class AggregateValidator implements PluginValidator {
     private final boolean stopOnFirstError;
@@ -26,7 +28,7 @@ public class AggregateValidator implements PluginValidator {
         this(false, validators);
     }
 
-    public void validate(PluginValidatorContext context) {
+    public void validate(PluginContext context) {
         for (PluginValidator validator : validators) {
             validator.validate(context);
             if (stopOnFirstError && context.hasErrors()) {
