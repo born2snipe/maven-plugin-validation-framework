@@ -12,12 +12,27 @@
  */
 package b2s.maven;
 
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
+import org.apache.maven.plugin.logging.Log;
+import org.apache.maven.project.MavenProject;
+
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class PluginContext {
     private Map<String, Object> values = new LinkedHashMap<String, Object>();
+    private Log log;
+    private MavenProject project;
+    private ArtifactRepository localRepository;
+    private List<ArtifactRepository> remoteRepositories;
+    private ArtifactFactory artifactFactory;
+    private ArtifactResolver artifactResolver;
+    private List<Artifact> pluginDependencies;
 
     public <T> T get(String name, Class<T> clazz) {
         return (T) values.get(name);
@@ -37,5 +52,33 @@ public class PluginContext {
 
     public int size() {
         return values.size();
+    }
+
+    public Log getLog() {
+        return log;
+    }
+
+    public MavenProject getProject() {
+        return project;
+    }
+
+    public ArtifactRepository getLocalRepository() {
+        return localRepository;
+    }
+
+    public List<ArtifactRepository> getRemoteRepositories() {
+        return remoteRepositories;
+    }
+
+    public ArtifactFactory getArtifactFactory() {
+        return artifactFactory;
+    }
+
+    public ArtifactResolver getArtifactResolver() {
+        return artifactResolver;
+    }
+
+    public List<Artifact> getPluginDependencies() {
+        return pluginDependencies;
     }
 }

@@ -12,31 +12,53 @@
  */
 package b2s.maven;
 
+import org.apache.maven.plugin.logging.Log;
 import org.junit.Before;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 
 public class PluginContextFactoryTest {
     private PluginContextFactory factory;
+    private PluginContextFieldMapper defaultFieldMapper;
+    private PluginContextFieldMapper matchingFieldMapper;
 
     @Test
     public void multipleFields() {
         PluginContext context = factory.build(new MultipleFields());
 
-        assertEquals(2, context.size());
-        assertEquals("value", context.get("field"));
-        assertEquals("value2", context.get("field2"));
+        verify(defaultFieldMapper).map(context, "field", "value");
+        verify(defaultFieldMapper).map(context, "field2", "value2");
+    }
+
+    @Test
+    public void singleField_toMatchingField() {
+        factory.registerMatchingField("log");
+
+        MatchingField field = new MatchingField();
+
+        PluginContext context = factory.build(field);
+
+        verify(matchingFieldMapper).map(context, "log", field.log);
     }
 
     @Test
     public void singleField() {
         PluginContext context = factory.build(new SingleField());
 
-        assertEquals(1, context.size());
-        assertEquals("value", context.get("name"));
+        verify(defaultFieldMapper).map(context, "name", "value");
+    }
+
+    @Test
+    public void inheritedFields() {
+        PluginContext context = factory.build(new InHeritedField());
+
+        verify(defaultFieldMapper).map(context, "name", "value");
+        verify(defaultFieldMapper).map(context, "child", "childValue");
     }
 
     @Test
@@ -49,7 +71,12 @@ public class PluginContextFactoryTest {
 
     @Before
     public void setUp() throws Exception {
+        defaultFieldMapper = mock(PluginContextFieldMapper.class);
+        matchingFieldMapper = mock(PluginContextFieldMapper.class);
+
         factory = new PluginContextFactory();
+        factory.setDefaultFieldMapper(defaultFieldMapper);
+        factory.setMatchingFieldMapper(matchingFieldMapper);
     }
 
     private static class MultipleFields {
@@ -59,6 +86,14 @@ public class PluginContextFactoryTest {
 
     private static class SingleField {
         private String name = "value";
+    }
+
+    private static class MatchingField {
+        private Log log = mock(Log.class);
+    }
+
+    private static class InHeritedField extends SingleField {
+        private String child = "childValue";
     }
 
     private static class NoFields {

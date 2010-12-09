@@ -42,7 +42,7 @@ public class AbstractMojoTest {
 
         assertTrue(mojo.executed);
     }
-    
+
     @Test
     public void passesValidators() throws MojoExecutionException, MojoFailureException {
         mojo.execute();

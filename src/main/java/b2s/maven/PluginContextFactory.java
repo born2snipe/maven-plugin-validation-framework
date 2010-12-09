@@ -13,21 +13,57 @@
 package b2s.maven;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 class PluginContextFactory {
+    private PluginContextFieldMapper defaultFieldMapper = new PutFieldInMapMapper();
+    private PluginContextFieldMapper matchingFieldMapper = new MatchingFieldMapper();
+    private List<String> matchingFieldNames = new ArrayList<String>();
+
     public PluginContext build(Object object) {
         PluginContext context = new PluginContext();
 
-        Field[] fields = object.getClass().getDeclaredFields();
+        List<Field> fields = findAllFieldsFor(object.getClass());
         for (Field field : fields) {
             try {
                 field.setAccessible(true);
-                context.put(field.getName(), field.get(object));
+
+                Object value = field.get(object);
+                String fieldName = field.getName();
+
+                if (matchingFieldNames.contains(fieldName)) {
+                    matchingFieldMapper.map(context, fieldName, value);
+                } else {
+                    defaultFieldMapper.map(context, fieldName, value);
+                }
             } catch (IllegalAccessException e) {
 
             }
         }
 
         return context;
+    }
+
+    private List<Field> findAllFieldsFor(Class clazz) {
+        List<Field> fields = new ArrayList<Field>();
+        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+        if (clazz.getSuperclass() != null) {
+            fields.addAll(findAllFieldsFor(clazz.getSuperclass()));
+        }
+        return fields;
+    }
+
+    void setDefaultFieldMapper(PluginContextFieldMapper defaultFieldMapper) {
+        this.defaultFieldMapper = defaultFieldMapper;
+    }
+
+    void setMatchingFieldMapper(PluginContextFieldMapper matchingFieldMapper) {
+        this.matchingFieldMapper = matchingFieldMapper;
+    }
+
+    public void registerMatchingField(String fieldName) {
+        matchingFieldNames.add(fieldName);
     }
 }

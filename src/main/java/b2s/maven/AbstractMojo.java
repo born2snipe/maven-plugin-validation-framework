@@ -16,14 +16,61 @@ import b2s.maven.validation.PluginErrors;
 import b2s.maven.validation.PluginErrorsFactory;
 import b2s.maven.validation.PluginValidator;
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProject;
+
+import java.util.List;
 
 
 public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo {
+    /**
+     * @parameter default-value="${project}"
+     */
+    private MavenProject project;
+
+    /**
+     * @parameter default-value="${localRepository}"
+     */
+    private ArtifactRepository localRepository;
+
+    /**
+     * @parameter default-value="${project.remoteArtifactRepositories}"
+     */
+    private List<ArtifactRepository> remoteRepositories;
+
+    /**
+     * @component
+     */
+    private ArtifactFactory artifactFactory;
+
+    /**
+     * @component
+     */
+    private ArtifactResolver artifactResolver;
+
+    /**
+     * @parameter default-value="${plugin.artifacts}"
+     */
+    private List<Artifact> pluginDependencies;
+
     private PluginValidator validator;
     private PluginContextFactory pluginContextFactory = new PluginContextFactory();
     private PluginErrorsFactory pluginErrorsFactory = new PluginErrorsFactory();
+
+    protected AbstractMojo() {
+        pluginContextFactory.registerMatchingField("artifactFactory");
+        pluginContextFactory.registerMatchingField("artifactResolver");
+        pluginContextFactory.registerMatchingField("localRepository");
+        pluginContextFactory.registerMatchingField("log");
+        pluginContextFactory.registerMatchingField("pluginDependencies");
+        pluginContextFactory.registerMatchingField("project");
+        pluginContextFactory.registerMatchingField("remoteRepositories");
+    }
 
     public final void execute() throws MojoExecutionException, MojoFailureException {
         PluginContext context = pluginContextFactory.build(this);
@@ -51,5 +98,29 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
 
     protected void setPluginErrorsFactory(PluginErrorsFactory pluginErrorsFactory) {
         this.pluginErrorsFactory = pluginErrorsFactory;
+    }
+
+    void setProject(MavenProject project) {
+        this.project = project;
+    }
+
+    void setLocalRepository(ArtifactRepository localRepository) {
+        this.localRepository = localRepository;
+    }
+
+    void setRemoteRepositories(List<ArtifactRepository> remoteRepositories) {
+        this.remoteRepositories = remoteRepositories;
+    }
+
+    void setArtifactFactory(ArtifactFactory artifactFactory) {
+        this.artifactFactory = artifactFactory;
+    }
+
+    void setArtifactResolver(ArtifactResolver artifactResolver) {
+        this.artifactResolver = artifactResolver;
+    }
+
+    void setPluginDependencies(List<Artifact> pluginDependencies) {
+        this.pluginDependencies = pluginDependencies;
     }
 }
