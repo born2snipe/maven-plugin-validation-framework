@@ -92,7 +92,7 @@ public abstract class AbstractMojo extends org.apache.maven.plugin.AbstractMojo 
         this.validator = validator;
     }
 
-    protected void setPluginValidatorContextFactory(PluginContextFactory pluginContextFactory) {
+    protected void setPluginContextFactory(PluginContextFactory pluginContextFactory) {
         this.pluginContextFactory = pluginContextFactory;
     }
 

@@ -95,7 +95,7 @@ public class AbstractMojoTest {
         errors = mock(PluginErrors.class);
 
         mojo = new ShuntMojo();
-        mojo.setPluginValidatorContextFactory(contextFactory);
+        mojo.setPluginContextFactory(contextFactory);
         mojo.setValidator(validator);
         mojo.setPluginErrorsFactory(pluginErrorsFactory);
 
