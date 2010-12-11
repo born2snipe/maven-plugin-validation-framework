@@ -18,8 +18,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 
 public class PluginContextFactoryTest {
@@ -51,6 +50,18 @@ public class PluginContextFactoryTest {
         PluginContext context = factory.build(new SingleField());
 
         verify(defaultFieldMapper).map(context, "name", "value");
+    }
+
+    @Test
+    public void childHasSameFieldNameAsTheParent() {
+        factory.registerMatchingField("log");
+
+        ChildHasSameFieldName obj = new ChildHasSameFieldName();
+
+        PluginContext context = factory.build(obj);
+
+        verify(matchingFieldMapper).map(context, "log", obj.log);
+        verifyNoMoreInteractions(matchingFieldMapper);
     }
 
     @Test
@@ -89,11 +100,15 @@ public class PluginContextFactoryTest {
     }
 
     private static class MatchingField {
-        private Log log = mock(Log.class);
+        private Log log = mock(Log.class, "log");
     }
 
     private static class InHeritedField extends SingleField {
         private String child = "childValue";
+    }
+
+    private static class ChildHasSameFieldName extends MatchingField {
+        private Log log = mock(Log.class, "logChild");
     }
 
     private static class NoFields {

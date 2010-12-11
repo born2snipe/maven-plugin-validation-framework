@@ -14,7 +14,6 @@ package b2s.maven;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 class PluginContextFactory {
@@ -48,11 +47,26 @@ class PluginContextFactory {
 
     private List<Field> findAllFieldsFor(Class clazz) {
         List<Field> fields = new ArrayList<Field>();
-        fields.addAll(Arrays.asList(clazz.getDeclaredFields()));
-        if (clazz.getSuperclass() != null) {
-            fields.addAll(findAllFieldsFor(clazz.getSuperclass()));
+        Class currentClass = clazz;
+        while (currentClass != null) {
+            Field[] currentClassFields = currentClass.getDeclaredFields();
+            for (Field currentClassField : currentClassFields) {
+                if (!doesFieldNameExistIn(fields, currentClassField.getName())) {
+                    fields.add(currentClassField);
+                }
+            }
+            currentClass = currentClass.getSuperclass();
         }
         return fields;
+    }
+
+    private boolean doesFieldNameExistIn(List<Field> fields, String fieldName) {
+        for (Field field : fields) {
+            if (field.getName().equals(fieldName)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     void setDefaultFieldMapper(PluginContextFieldMapper defaultFieldMapper) {
